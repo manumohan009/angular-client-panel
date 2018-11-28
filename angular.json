@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angularcontactmanager": {
+    "angular-client-panel": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/angularcontactmanager",
+            "outputPath": "dist/angular-client-panel",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -21,6 +21,7 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.css",
+              "node_modules/font-awesome/css/font-awesome.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
             "scripts": [
@@ -50,18 +51,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "angularcontactmanager:build"
+            "browserTarget": "angular-client-panel:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "angularcontactmanager:build:production"
+              "browserTarget": "angular-client-panel:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "angularcontactmanager:build"
+            "browserTarget": "angular-client-panel:build"
           }
         },
         "test": {
@@ -85,7 +86,7 @@
         }
       }
     },
-    "angularcontactmanager-e2e": {
+    "angular-client-panel-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -93,11 +94,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "angularcontactmanager:serve"
+            "devServerTarget": "angular-client-panel:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "angularcontactmanager:serve:production"
+              "devServerTarget": "angular-client-panel:serve:production"
             }
           }
         },
@@ -111,5 +112,5 @@
       }
     }
   },
-  "defaultProject": "angularcontactmanager"
+  "defaultProject": "angular-client-panel"
 }

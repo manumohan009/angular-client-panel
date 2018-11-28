@@ -1,3 +1,5 @@
-<p>
-  dashboard works!
-</p>
+<ul>
+  <li *ngFor="let item of items | async">
+    {{ item.country}}
+  </li>
+</ul>

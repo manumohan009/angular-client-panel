@@ -1,25 +1,28 @@
-<nav class="navbar navbar-expand-sm bg-primary navbar-light fixed-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
     <div class="container">
-      <button class="navbar-toggler" (click)="toggleNavbar()">
+      <button class="navbar-toggler" (click)="this.navbarOpen = !this.navbarOpen">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <a routerLink="/dashboard" class="navbar-brand">Client Manager</a>
+      <a routerLink="/dashboard" class="navbar-brand">Client Panel</a>
       <div class="collapse navbar-collapse" [ngClass]="{ 'show': navbarOpen }">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a routerLink="/dashboard" class="nav-link">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a routerLink="/dashboard" class="nav-link">Settings</a>
+            <a routerLink="/settings" class="nav-link">Settings</a>
           </li>
           <li class="nav-item">
-            <a routerLink="/dashboard" class="nav-link">Logout</a>
+            <a routerLink="/signin" class="nav-link">Logout</a>
           </li>
           <li class="nav-item">
-            <a routerLink="/dashboard" class="nav-link">Login</a>
+            <a routerLink="/signin" class="nav-link">Login</a>
           </li>
           <li class="nav-item">
-            <a routerLink="/dashboard" class="nav-link">Register</a>
+            <a routerLink="/signup" class="nav-link">Register</a>
+          </li>
+          <li class="nav-item">
+            <a routerLink="/client/add" class="nav-link">Add Client</a>
           </li>
         </ul>
       </div>
