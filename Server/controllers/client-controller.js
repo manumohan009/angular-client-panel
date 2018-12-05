@@ -1,37 +1,36 @@
 const mongoose = require('mongoose');
-// const shortid = require('shortid');
-// const time = require('./../libs/timeLib');
-// const response = require('./../libs/responseLib');
-const logger = require('./../libs/logger-lib');
-// const check = require('./../libs/checkLib');
-
-const ClientModel = mongoose.model('Client');
+const shortid = require('shortid');
+const time = require('../libs/time-lib');
+const response = require('../libs/response-lib')
+const logger = require('../libs/logger-lib');
+const check = require('../libs/check-lib')
+/* Models */
+const ClientModel = mongoose.model('Client')
 
 /**
- * function to read all Clients.
+ * function to read all client
  */
-const getAllClient = (req, res) => {
-  ClientModel.find()
-    .select('-__v -_id')
-    .lean()
-    .exec((err, result) => {
-      if(err) {
-        console.log(err)
-        logger.error(err.message, 'Blog Controller', 10);
-        // const apiResponse = response.generate(true, 'Failed to find client details', 500, null);
-        res.send('Failed to find client details');
-      // } else if (check.isEmpty(result)) {
-      //   logger.info('No Client Found', 'Client Controller: getAllClient');
-      //   // const apiResponse = response.generate(true, 'No Client Found', 404, null);
-      //   res.send('No Client Found');
-      }
-       else {
-        const apiResponse = response.generate(false, 'All Client Details Found', 200, result);
-        res.send(result);
-      }
-    });
-}
+let getAllClient = (req, res) => {
+    ClientModel.find()
+        .select('-__v -_id')
+        .lean()
+        .exec((err, result) => {
+            if (err) {
+                console.log(err)
+                logger.error(err.message, 'Client Controller: getAllClient', 10)
+                let apiResponse = response.generate(true, 'Failed To Find Client Details', 500, null)
+                res.send(apiResponse)
+            } else if (check.isEmpty(result)) {
+                logger.info('No Client Found', 'Client Controller: getAllClient')
+                let apiResponse = response.generate(true, 'No Client Found', 404, null)
+                res.send(apiResponse)
+            } else {
+                let apiResponse = response.generate(false, 'All Client Details Found', 200, result)
+                res.send(apiResponse)
+            }
+        })
+}// end get all clients
 
 module.exports = {
-  getAllClient: getAllClient
-}
+    getAllClient: getAllClient
+}// end exports
