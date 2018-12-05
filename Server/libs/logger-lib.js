@@ -1,32 +1,32 @@
-const logger = require('pino')()
-const moment = require('moment')
+const logger = require('pino')();
+const moment = require('moment');
 
-let captureError = (errorMessage, errorOrigin, errorLevel) => {
-  let currentTime = moment()
+const captureError = (errorMessage, errorOrigin, errorLevel) => {
+  const currentTime = moment();
 
-  let errorResponse = {
+  const errorResponse = {
     timestamp: currentTime,
     errorMessage: errorMessage,
     errorOrigin: errorOrigin,
     errorLevel: errorLevel
   }
 
-  logger.error(errorResponse)
-  return errorResponse
+  logger.error(errorResponse);
+  return errorResponse;
 } // end captureError
 
-let captureInfo = (message, origin, importance) => {
-  let currentTime = moment()
+const captureInfo = (message, origin, importance) => {
+  const currentTime = moment();
 
-  let infoMessage = {
+  const infoMessage = {
     timestamp: currentTime,
     message: message,
     origin: origin,
     level: importance
-  }
+  };
 
-  logger.info(infoMessage)
-  return infoMessage
+  logger.info(infoMessage);
+  return infoMessage;
 } // end infoCapture
 
 module.exports = {

@@ -1,37 +1,37 @@
 // this is needed for importing expressjs into our application
-const express = require('express')
-const http = require('http')
-const appConfig = require('./config/app-config')
-const fs = require('fs')
-const mongoose = require('mongoose')
-const cookieParser = require('cookie-parser')
-const bodyParser = require('body-parser')
-const globalErrorMiddleware = require('./middlewares/app-error-handler')
-const routeLoggerMiddleware = require('./middlewares/route-logger')
-var helmet = require('helmet')
-const logger = require('./libs/logger-lib')
+const express = require('express');
+const http = require('http');
+const appConfig = require('./config/app-config');
+const fs = require('fs');
+const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const globalErrorMiddleware = require('./middlewares/app-error-handler');
+const routeLoggerMiddleware = require('./middlewares/route-logger');
+var helmet = require('helmet');
+const logger = require('./libs/logger-lib');
 
 
 //declaring an instance or creating an application instance
-const app = express()
+const app = express();
 
 //middlewares
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(cookieParser())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-app.use(globalErrorMiddleware.globalErrorHandler)
-app.use(routeLoggerMiddleware.logIp)
-app.use(helmet())
+app.use(globalErrorMiddleware.globalErrorHandler);
+app.use(routeLoggerMiddleware.logIp);
+app.use(helmet());
 
 
 
 // Bootstrap models
-let modelsPath = './models'
+const modelsPath = './models';
 fs.readdirSync(modelsPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
-        console.log(file)
-        require(modelsPath + '/' + file)
+        console.log(file);
+        require(modelsPath + '/' + file);
     }
 })
 // end Bootstrap models
@@ -39,12 +39,12 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 
 
 // Bootstrap route
-let routesPath = './routes'
+const routesPath = './routes';
 fs.readdirSync(routesPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
         console.log("including the following file");
         console.log(routesPath + '/' + file)
-        let route = require(routesPath + '/' + file);
+        const route = require(routesPath + '/' + file);
         route.setRouter(app);
     }
 });
@@ -53,19 +53,19 @@ fs.readdirSync(routesPath).forEach(function (file) {
 
 // calling global 404 handler after route
 
-app.use(globalErrorMiddleware.globalNotFoundHandler)
+app.use(globalErrorMiddleware.globalNotFoundHandler);
 
 // end global 404 handler
 /**
  * Create HTTP server.
  */
 
-const server = http.createServer(app)
+const server = http.createServer(app);
 // start listening to http server
-console.log(appConfig)
-server.listen(appConfig.port)
-server.on('error', onError)
-server.on('listening', onListening)
+console.log(appConfig);
+server.listen(appConfig.port);
+server.on('error', onError);
+server.on('listening', onListening);
 
 // end server listening code
 
@@ -75,23 +75,23 @@ server.on('listening', onListening)
 
 function onError(error) {
     if (error.syscall !== 'listen') {
-        logger.error(error.code + ' not equal listen', 'serverOnErrorHandler', 10)
-        throw error
+        logger.error(error.code + ' not equal listen', 'serverOnErrorHandler', 10);
+        throw error;
     }
 
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            logger.error(error.code + ':elavated privileges required', 'serverOnErrorHandler', 10)
-            process.exit(1)
+            logger.error(error.code + ':elavated privileges required', 'serverOnErrorHandler', 10);
+            process.exit(1);
             break
         case 'EADDRINUSE':
-            logger.error(error.code + ':port is already in use.', 'serverOnErrorHandler', 10)
-            process.exit(1)
+            logger.error(error.code + ':port is already in use.', 'serverOnErrorHandler', 10);
+            process.exit(1);
             break
         default:
-            logger.error(error.code + ':some unknown error occured', 'serverOnErrorHandler', 10)
-            throw error
+            logger.error(error.code + ':some unknown error occured', 'serverOnErrorHandler', 10);
+            throw error;
     }
 }
 
@@ -100,17 +100,17 @@ function onError(error) {
  */
 
 function onListening() {
-    var addr = server.address()
+    var addr = server.address();
     var bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     ('Listening on ' + bind)
-    logger.info('server listening on port' + addr.port, 'serverOnListeningHandler', 10)
-    let db = mongoose.connect(appConfig.db.uri, { useNewUrlParser: true } ) // { useMongoClient: true }
+    logger.info('server listening on port ' + addr.port, 'serverOnListeningHandler', 10);
+    const db = mongoose.connect(appConfig.db.uri, {useCreateIndex: true, useNewUrlParser: true} ); // { useMongoClient: true }
 }
 
 process.on('unhandledRejection', (reason, p) => {
-    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason)
+    console.log('Unhandled Rejection at: Promise', p, 'reason:', reason);
     // application specific logging, throwing an error, or other logic here
 })
 
@@ -118,7 +118,7 @@ process.on('unhandledRejection', (reason, p) => {
 // handling mongoose connection error
 mongoose.connection.on('error', function (err) {
     console.log('database connection error');
-    console.log(err)
+    console.log(err);
 
 }); // end mongoose connection error
 

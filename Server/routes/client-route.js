@@ -2,12 +2,13 @@ const express = require('express');
 const router = express.Router();
 const clientController = require('../controllers/client-controller');
 const appConfig = require('../config/app-config');
-// const auth = require('./../middlewares/auth');
+const auth = require('./../middlewares/auth');
 
 module.exports.setRouter = function(app){
   const baseUrl = appConfig.apiVersion+'/clients';
 
-  app.get(baseUrl+'/all', clientController.getAllClient);
+  app.get(baseUrl+'/all',auth.isAuthenticated, clientController.getAllClient);
+  // http://localhost:9000/api/v1/clients/all?authToken=Admin
 
 	/**
 	 * @api {get} /api/v1/clients/all Get all clients
