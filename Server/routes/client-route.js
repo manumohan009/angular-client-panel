@@ -9,6 +9,7 @@ module.exports.setRouter = function(app){
 
   app.get(baseUrl+'/all',auth.isAuthenticated, clientController.getAllClient);
   // http://localhost:9000/api/v1/clients/all?authToken=Admin
+  // To generate api documentation >apidoc -i routes/ -o apidoc/
 
 	/**
 	 * @api {get} /api/v1/clients/all Get all clients
