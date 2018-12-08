@@ -1,6 +1,8 @@
+'use strict'
 const logger = require('pino')();
 const moment = require('moment');
 
+// myErrorFunction is a definition of how the errors will be formatted in our system
 const captureError = (errorMessage, errorOrigin, errorLevel) => {
   const currentTime = moment();
 

@@ -1,36 +1,53 @@
 // this is needed for importing expressjs into our application
 const express = require('express');
-const http = require('http');
-const appConfig = require('./config/app-config');
-const fs = require('fs');
-const mongoose = require('mongoose');
+const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const globalErrorMiddleware = require('./middlewares/app-error-handler');
-const routeLoggerMiddleware = require('./middlewares/route-logger');
+const fs = require('fs');
+const http = require('http');
+const mongoose = require('mongoose');
+const morgan = require('morgan');
 var helmet = require('helmet');
-const logger = require('./libs/logger-lib');
+const appConfig = require('./config/app-config');
+const logger = require('./app/libs/logger-lib');
+const routeLoggerMiddleware = require('./app/middlewares/route-logger');
+const globalErrorMiddleware = require('./app/middlewares/app-error-handler');
 
 
 //declaring an instance or creating an application instance
 const app = express();
 
+app.use(morgan('dev'));
+
 //middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(globalErrorMiddleware.globalErrorHandler);
 app.use(routeLoggerMiddleware.logIp);
+app.use(globalErrorMiddleware.globalErrorHandler);
 app.use(helmet());
 
+app.use(express.static(path.join(__dirname, 'client')));
+
+const modelsPath = './app/models';
+const controllersPath = './app/controllers';
+const libsPath = './app/libs';
+const middlewaresPath = './app/middlewares';
+const routesPath = './app/routes';
+
+app.all('*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+  next();
+});
 
 
 // Bootstrap models
-const modelsPath = './models';
 fs.readdirSync(modelsPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
-        console.log(file);
         require(modelsPath + '/' + file);
     }
 })
@@ -39,11 +56,8 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 
 
 // Bootstrap route
-const routesPath = './routes';
 fs.readdirSync(routesPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
-        console.log("including the following file");
-        console.log(routesPath + '/' + file)
         const route = require(routesPath + '/' + file);
         route.setRouter(app);
     }
@@ -84,11 +98,11 @@ function onError(error) {
         case 'EACCES':
             logger.error(error.code + ':elavated privileges required', 'serverOnErrorHandler', 10);
             process.exit(1);
-            break
+            break;
         case 'EADDRINUSE':
             logger.error(error.code + ':port is already in use.', 'serverOnErrorHandler', 10);
             process.exit(1);
-            break
+            break;
         default:
             logger.error(error.code + ':some unknown error occured', 'serverOnErrorHandler', 10);
             throw error;
@@ -114,12 +128,15 @@ process.on('unhandledRejection', (reason, p) => {
     // application specific logging, throwing an error, or other logic here
 })
 
-
+/**
+ * database connection settings
+ */
 // handling mongoose connection error
 mongoose.connection.on('error', function (err) {
     console.log('database connection error');
     console.log(err);
-
+    logger.error(err,'mongoose connection on error handler', 10);
+    //process.exit(1)
 }); // end mongoose connection error
 
 // handling mongoose success event
@@ -127,9 +144,12 @@ mongoose.connection.on('open', function (err) {
     if (err) {
         console.log("database error");
         console.log(err);
-
+        logger.error(err, 'mongoose connection open handler', 10);
     } else {
         console.log("database connection open success");
+        logger.info("database connection open",'database connection open handler', 10);
     }
-
+    //process.exit(1)
 }); // end mongoose connection open handler
+
+module.exports = app;

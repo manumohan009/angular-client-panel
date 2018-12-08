@@ -16,6 +16,7 @@
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.23",
     "mongoose": "^5.3.14",
+    "morgan": "^1.9.1",
     "pino": "^5.9.0",
     "shortid": "^2.2.14"
   }

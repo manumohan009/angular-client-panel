@@ -1,5 +1,5 @@
+'use strict'
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 
 const clientSchema = new Schema(
@@ -15,6 +15,10 @@ const clientSchema = new Schema(
     lastName: {
       type: String,
       default: ''
+    },
+    password: {
+      type: String,
+      default: 'passskdajakdjkadsj'
     },
     email: {
       type: String,
