@@ -16,10 +16,6 @@ const clientSchema = new Schema(
       type: String,
       default: ''
     },
-    password: {
-      type: String,
-      default: 'passskdajakdjkadsj'
-    },
     email: {
       type: String,
       default: ''
@@ -32,9 +28,9 @@ const clientSchema = new Schema(
       type: Number,
       default: 0
     },
-    created: {
+    createdOn: {
       type: Date,
-      default: Date.now
+      default:""
     },
     lastModified: {
       type: Date,

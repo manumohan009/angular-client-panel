@@ -5,69 +5,12 @@ const appConfig = require('./../../config/app-config');
 const auth = require('./../middlewares/auth');
 
 module.exports.setRouter = (app) =>{
-  const baseUrl = appConfig.apiVersion+'/clients';
-
-// params: firstName, lastName, email, mobileNumber, password
-app.post(`${baseUrl}/signup`, clientController.signUpFunction);
-
-/**
- * @apiGroup users
- * @apiVersion  1.0.0
- * @api {post} /api/v1/users/login api for user login.
- *
- * @apiParam {string} email email of the user. (body params) (required)
- * @apiParam {string} password password of the user. (body params) (required)
- *
- * @apiSuccess {object} myResponse shows error status, message, http status code, result.
- *
- * @apiSuccessExample {object} Success-Response:
-     {
-        "error": false,
-        "message": "Login Successful",
-        "status": 200,
-        "data": {
-            "authToken": "eyJhbGciOiJIUertyuiopojhgfdwertyuVCJ9.MCwiZXhwIjoxNTIwNDI29tIiwibGFzdE5hbWUiE4In19.hAR744xIY9K53JWm1rQ2mc",
-            "userDetails": {
-            "mobileNumber": 2234435524,
-            "email": "someone@mail.com",
-            "lastName": "Sengar",
-            "firstName": "Rishabh",
-            "userId": "-E9zxTYA8"
-        }
-
-    }
-*/
-
- // params: email, password.
- app.post(`${baseUrl}/login`, clientController.loginFunction);
-
- /**
-  * @apiGroup users
-  * @apiVersion  1.0.0
-  * @api {post} /api/v1/users/logout to logout user.
-  *
-  * @apiParam {string} userId userId of the user. (auth headers) (required)
-  *
-  * @apiSuccess {object} myResponse shows error status, message, http status code, result.
-  *
-  * @apiSuccessExample {object} Success-Response:
-      {
-         "error": false,
-         "message": "Logged Out Successfully",
-         "status": 200,
-         "data": null
-
-     }
- */
-
- // auth token params: userId.
- app.post(`${baseUrl}/logout`, clientController.logout);
+  let baseUrl = `${appConfig.apiVersion}/clients`;
 
 
-
-  app.get(baseUrl+'/all',auth.isAuthenticated, clientController.getAllClient);
+  app.get(baseUrl+'/all', clientController.getAllClient);
   // http://localhost:9000/api/v1/clients/all?authToken=Admin
-  // To generate api documentation >apidoc -i routes/ -o apidoc/
+  // To generate api documentation >apidoc -i app/routes/ -o apidoc/
 
 	/**
 	 * @api {get} /api/v1/clients/all Get all clients
@@ -86,7 +29,6 @@ app.post(`${baseUrl}/signup`, clientController.signUpFunction);
 						clientId: "string",
 						firstName: "string",
             lastName: "string",
-            password: "string",
 						email: "string",
 						phone: number,
 						balance: boolean

@@ -153,3 +153,5 @@ mongoose.connection.on('open', function (err) {
 }); // end mongoose connection open handler
 
 module.exports = app;
+
+//  To generate api documentation >apidoc -i app/routes/ -o apidoc/

@@ -3,33 +3,11 @@ const shortid = require('shortid');
 const time = require('../libs/time-lib');
 const response = require('../libs/response-lib');
 const logger = require('../libs/logger-lib');
-const validateInput = require('../libs/paramsValidationLib');
+const validateInput = require('../libs/params-validation-lib');
 const check = require('../libs/check-lib');
 
 /* Models */
 const ClientModel = mongoose.model('Client');
-
-// start user signup function
-
-const signUpFunction = (req, res) => {
-
-
-
-}// end user signup function
-
-// start of login function
-const loginFunction = (req, res) => {
-
-}
-
-
-// end of the login function
-
-
-const logout = (req, res) => {
-
-} // end of the logout function.
-
 
 /**
  * function to read all client
@@ -81,9 +59,6 @@ const viewByClientId = (req, res) => {
 }
 
 module.exports = {
-    signUpFunction: signUpFunction,
-    loginFunction: loginFunction,
-    logout: logout,
     getAllClient: getAllClient,
     viewByClientId: viewByClientId
 }// end exports
