@@ -1,29 +1,54 @@
+const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const request = require("request");
+const Auth = mongoose.model('Auth');
 
-/* Const Library */
-const logger = require('../libs/logger-lib');
-const response = require('../libs/response-lib');
-const check = require('../libs/check-lib');
+const logger = require('./../libs/logger-lib');
+const responseLib = require('./../libs/response-lib');
+const token = require('./../libs/token-lib');
+const check = require('./../libs/check-lib');
 
-const isAuthenticated = (req, res, next) => {
-  if (req.params.authToken || req.query.authToken || req.header('authToken')) {
-    if(req.params.authToken=="Admin" || req.query.authToken=="Admin" || req.header('authToken')=="Admin"){
-      req.user = {fullName:'Admin',userId:'Admin'};
-      next();
-    }
-    else{
-      logger.error('Incorrect authentication token', 'Authentication Middleware', 5);
-      const apiResponse = response.generate(true, 'Incorrect authentication token', 403, null);
-      res.send(apiResponse);
-    }
+let isAuthorized = (req, res, next) => {
+
+
+  if (req.params.authToken || req.query.authToken || req.body.authToken || req.header('authToken')) {
+    Auth.findOne({authToken: req.header('authToken') || req.params.authToken || req.body.authToken || req.query.authToken}, (err, authDetails) => {
+      if (err) {
+        console.log(err)
+        logger.error(err.message, 'AuthorizationMiddleware', 10)
+        let apiResponse = responseLib.generate(true, 'Failed To Authorized', 500, null)
+        res.send(apiResponse)
+      } else if (check.isEmpty(authDetails)) {
+        logger.error('No AuthorizationKey Is Present', 'AuthorizationMiddleware', 10)
+        let apiResponse = responseLib.generate(true, 'Invalid Or Expired AuthorizationKey', 404, null)
+        res.send(apiResponse)
+      } else {
+        token.verifyToken(authDetails.authToken,authDetails.tokenSecret,(err,decoded)=>{
+
+            if(err){
+                logger.error(err.message, 'Authorization Middleware', 10)
+                let apiResponse = responseLib.generate(true, 'Failed To Authorized', 500, null)
+                res.send(apiResponse)
+            }
+            else{
+
+                req.user = {userId: decoded.data.userId}
+                next()
+            }
+
+
+        });// end verify token
+
+      }
+    })
   } else {
-    logger.error('Authentication Token Missing', 'Authentication Middleware', 5);
-    const apiResponse = response.generate(true, 'Authentication Token Is Missing In Request', 403, null);
-    res.send(apiResponse);
+    logger.error('AuthorizationToken Missing', 'AuthorizationMiddleware', 5)
+    let apiResponse = responseLib.generate(true, 'AuthorizationToken Is Missing In Request', 400, null)
+    res.send(apiResponse)
   }
 }
 
 
-
 module.exports = {
-  isAuthenticated: isAuthenticated
-};
+  isAuthorized: isAuthorized
+}

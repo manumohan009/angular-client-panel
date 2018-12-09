@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const shortid = require('shortid')
+const jwt = require('jsonwebtoken');
+const shortid = require('shortid');
 const secretKey = 'someVeryRandomStringThatNobodyCanGuess';
 
 
@@ -15,16 +15,17 @@ let generateToken = (data, cb) => {
       data: data
     }
     let tokenDetails = {
-      token: jwt.sign(claims, secretKey)
+      token: jwt.sign(claims, secretKey),
+      tokenSecret : secretKey
     }
     cb(null, tokenDetails)
   } catch (err) {
     console.log(err)
     cb(err, null)
   }
-}// end generate token 
+}// end generate token
 
-let verifyClaim = (token, cb) => {
+let verifyClaim = (token,secretKey,cb) => {
   // verify a token symmetric
   jwt.verify(token, secretKey, function (err, decoded) {
     if(err){
@@ -36,13 +37,16 @@ let verifyClaim = (token, cb) => {
       console.log("user verified");
       console.log(decoded);
       cb(null,decoded);
-    }  
- 
- 
+    }
+
+
   });
 
 
-}// end verify claim 
+}// end verify claim
+
+
+
 
 module.exports = {
   generateToken: generateToken,

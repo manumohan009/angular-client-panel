@@ -47,7 +47,7 @@ module.exports.setRouter = (app) =>{
 	   }
 	 */
 
-  app.get(baseUrl+'/view/:clientId',auth.isAuthenticated,clientController.viewByClientId);
+  app.get(baseUrl+'/view/:clientId',clientController.viewByClientId);
   // http://localhost:9000/api/v1/clients/view/1?authToken=Admin
 
   /**
