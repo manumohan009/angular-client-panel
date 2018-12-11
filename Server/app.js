@@ -1,4 +1,4 @@
-// this is needed for importing expressjs into our application
+
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -7,8 +7,8 @@ const fs = require('fs');
 const http = require('http');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-var helmet = require('helmet');
-const appConfig = require('./config/app-config');
+const helmet = require('helmet');
+const appConfig = require('./app/controllers/config-controller');
 const logger = require('./app/libs/logger-lib');
 const routeLoggerMiddleware = require('./app/middlewares/route-logger');
 const globalErrorMiddleware = require('./app/middlewares/app-error-handler');
@@ -45,6 +45,7 @@ app.all('*', function(req, res, next) {
 });
 
 
+
 // Bootstrap models
 fs.readdirSync(modelsPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
@@ -59,7 +60,8 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 fs.readdirSync(routesPath).forEach(function (file) {
     if (~file.indexOf('.js')) {
         const route = require(routesPath + '/' + file);
-        route.setRouter(app);
+        var routeName = appConfig.baseURL+ "/"+file.substring(0,file.indexOf('-route.js'));
+        app.use(routeName,route);
     }
 });
 // end bootstrap route
@@ -120,7 +122,7 @@ function onListening() {
         : 'port ' + addr.port;
     ('Listening on ' + bind)
     logger.info('server listening on port ' + addr.port, 'serverOnListeningHandler', 10);
-    const db = mongoose.connect(appConfig.db.uri, {useCreateIndex: true, useNewUrlParser: true} ); // { useMongoClient: true }
+    const db = mongoose.connect(appConfig.db_uri, {useCreateIndex: true, useNewUrlParser: true} ); // { useMongoClient: true }
 }
 
 process.on('unhandledRejection', (reason, p) => {

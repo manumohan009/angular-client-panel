@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const clientController = require('../controllers/client-controller');
-const appConfig = require('./../../config/app-config');
-const auth = require('./../middlewares/auth');
+const clientController = require('./app/controllers/client-controller');
+const auth = require('./app/middlewares/auth');
 
 module.exports.setRouter = (app) =>{
   let baseUrl = `${appConfig.apiVersion}/clients`;
